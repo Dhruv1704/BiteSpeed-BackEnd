@@ -1,0 +1,47 @@
+const pg = require('pg');
+require('dotenv').config();
+const crypto = require('crypto')
+const config = {
+    user:process.env.AIVEN_USERNAME,
+    password: process.env.AIVEN_PASSWORD,
+    host: process.env.AIVEN_HOST,
+    port: process.env.AIVEN_PORT,
+    database: "defaultdb",
+    ssl: {
+        rejectUnauthorized: true,
+        ca: `-----BEGIN CERTIFICATE-----
+MIIEUDCCArigAwIBAgIULr26xb9VqSOyk3rT5BlU/iRegK8wDQYJKoZIhvcNAQEM
+BQAwQDE+MDwGA1UEAww1NTllZDkwZDctNWE0Yi00ZTQ5LTg3ZGQtMmZiMTg4MDBl
+OWY2IEdFTiAxIFByb2plY3QgQ0EwHhcNMjUxMDIzMTc0MTA0WhcNMzUxMDIxMTc0
+MTA0WjBAMT4wPAYDVQQDDDU1OWVkOTBkNy01YTRiLTRlNDktODdkZC0yZmIxODgw
+MGU5ZjYgR0VOIDEgUHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCC
+AYoCggGBANHw+7GbIj5YaK/Mm2i8pby2UvgnNAMKIn3ozuelwkdHLdekSZLjzZjN
+cvpPrQeMQKAZC7v0BVuuuQXhtsIuiPEGG0HOHGmRLN60LvYkzgxivJGAjwuknlbY
+TuaeBKQaHudtfMJ0CcyHpn/BtCxgffiAes7uRMGJJoqBHBr5D7sUY0ev/oTaWG97
+Th8S/DQDWqGf6c5v1N05pWpGzIQfYhGEstzdiBcyC0NG4X+ASad1BuJI9oz5moT4
+r1SFNpHZodCEwjHPSfYQC0yLwOCSBGkYNn8gwVS43pBO/0rEmJWRNVXtg8JWCN+O
+QATV+NhK1CcOrwrEMmmJhRO7M/lCJAE6zS2hPgUAoZpuLQQydV/L9Lp7wtKitNO5
+ok5x4tdglzrf1kGfmy4xLJO3iIqNQMEr1MCv7JeFwHHFaDZUCi59I0BjZzQOPYl9
+RRZgcZQzcjFXKpsML+PrFZ6M2UM4tQwqdIRqlz6jATIrpXivDQc8K13NQHLeW1X5
+WSa/PN4c/QIDAQABo0IwQDAdBgNVHQ4EFgQUD0evrSSOPzbNHDdFvqNqjdsNB7Ew
+EgYDVR0TAQH/BAgwBgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQAD
+ggGBAFvOyOlnBwJTedu7+14zakCJq4xZZhBGq+L0JNk51kDXh5NTJ5x6IUHlxNGS
+lbaT6gUqOCP+qAC1Q+kWbyAA+bAxxuzuwJ8JsrkwwJrJBD8D8DHSAU8Dv8kq2u4R
+zJfsbi++MiVqmOeb6Jai3dyNQjS6OMyWo/kt0AQW1kszHZY6fToPd0qISpnJGho0
+BkDfMlAzCEmI0W2421QCjNnQ+8ridnt4gEoMBvkxVGsYB3WHYy7WSMlKha9zd4E5
+JfE0brYrMntaYmBbvtBrGjAkaVbHaA8vAOqN1rZDEQo+P2/qaS64bDQ/iL+vx4J6
+EfVuv1bn14l9IeLlOFaWDN4AgoZR/P3KPhG6HjDtDJup3nJ3E8WQ8VVPeT/1nx/p
+PNgeOfBK6alVVrSWveD99Wp1yk7EksKilHR5xRtbMf5K461TtI6ZURMASXjM2IcN
+K42c1kWoHB71UEC8xba4TLoAmsiPnoJdWbxjn9Tv/756EagXCWf9PLz0lbJEGSGq
+YdZaHw==
+-----END CERTIFICATE-----
+` },
+};
+
+
+const client = new pg.Client(config);
+const connectToDB = ()=> client.connect()
+        .then(() => console.log('Connected to PostgreSQL'))
+        .catch(err => console.error('Connection error', err.stack));
+
+module.exports = connectToDB;
