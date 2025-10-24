@@ -40,8 +40,5 @@ YdZaHw==
 
 
 const client = new pg.Client(config);
-const connectToDB = ()=> client.connect()
-        .then(() => console.log('Connected to PostgreSQL'))
-        .catch(err => console.error('Connection error', err.stack));
 
-module.exports = connectToDB;
+module.exports = client;
