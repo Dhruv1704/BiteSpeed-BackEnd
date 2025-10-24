@@ -19,14 +19,15 @@ router.post('/', [
     }
 
     const emailOrPhoneQueryRes = await getRowsWithEmailOrPhone(email, phoneNumber);
-    if(result.status==="error") return res.status(400).json({type: "error", message: result.message});
+    if(emailOrPhoneQueryRes.status==="error") return res.status(400).json(emailOrPhoneQueryRes);
 
     const emailOrPhonerows = emailOrPhoneQueryRes.rows;
 
     if(emailOrPhonerows.length===0){
         // create new primary contact
-        const newContact = await createNewContact(email, phoneNumber, 0);
-        const contact = createContactJson([newContact]);
+        const newContactRes = await createNewContact(email, phoneNumber, 0);
+        if(newContactRes.status==="error") return res.status(400).json(newContactRes);
+        const contact = createContactJson([newContact.row]);
         return res.json({contact});
     }
 
@@ -37,13 +38,30 @@ router.post('/', [
         }
     })
 
-    const linkedRowsQueryRes = await getLinkedContacts(linkedIdSet);
-    if(result.status==="error") return res.status(400).json({type: "error", message: result.message});
+    const linkedRowsQueryRes = await getLinkedContacts(Array.from(linkedIdSet));
+    if(linkedRowsQueryRes.status==="error") return res.status(400).json(linkedRowsQueryRes);
 
     const linkedRows = linkedRowsQueryRes.rows;
 
-    const rowsAfterPrimaryCheck = (linkedRows, linkedIdSet);
-    const contact = createContactJson(rowsAfterPrimaryCheck);
+    const rowsAfterPrimaryCheck = await rowPrimaryCheck(linkedRows, linkedIdSet);
+    if(rowsAfterPrimaryCheck.status==="error") return res.status(400).json(rowsAfterPrimaryCheck);
+
+    // checking new email or phone number
+    let isEmailExist= !email?true:false;
+    let doesPhoneExist= !phoneNumber?true:false;
+    linkedRows.forEach((row)=>{
+        if(row.email===email)isEmailExist=true;
+        if(row.phonenumber===phoneNumber)doesPhoneExist=true;
+    });
+
+    if(!isEmailExist || !doesPhoneExist){
+        // create new secondary contact for new information
+        const newContactRes = await createNewContact(email, phoneNumber, linkedRows.length, linkedRows[0].linkedid || linkedRows[0].id);
+        if(newContactRes.status==="error") return res.status(400).json(newContactRes);
+        linkedRows.push(newContactRes.row);
+    }
+
+    const contact = createContactJson(rowsAfterPrimaryCheck.rows);
     return res.json({contact});
 });
 
@@ -58,9 +76,10 @@ async function getRowsWithEmailOrPhone(email, phoneNumber) {
     }
 }
 // gets rows with linkedId and id.
-async function getLinkedContacts(linkedId) {
+async function getLinkedContacts(linkedIds) {
     try {
-        const sql = `SELECT * FROM contact WHERE id=${linkedId} OR linkedId=${linkedId}`;
+        const ids = `(${linkedIds.join(", ")})`;
+        const sql = `SELECT * FROM contact WHERE id in ${ids} OR linkedId in ${ids}`;
         const {rows} = await clientDB.query(sql);
         return {status: "success",rows};
     }catch (e){
@@ -100,10 +119,20 @@ function createContactJson(rows){
 }
 
 async function createNewContact(email, phoneNumber, existingRowsCount, linkedId=null){
-    const sql = `INSERT INTO contact (email, phoneNumber, linkPrecedence, linkedID) VALUES ($1, $2, $3, $4) RETURNING *`;
-    const values = [email, phoneNumber, existingRowsCount===0 ? "primary" : "secondary", linkedId];
-    const {rows} = await clientDB.query(sql, values);
-    return rows[0];
+    try {
+        const sql = `INSERT INTO contact (email, phoneNumber, linkPrecedence, linkedID)
+                     VALUES ($1, $2, $3, $4) RETURNING *`;
+        const values = [email, phoneNumber, existingRowsCount === 0 ? "primary" : "secondary", linkedId];
+        const {rows} = await clientDB.query(sql, values);
+        return {status: "success",row: rows[0]};
+    }catch (e){
+        return {status: "error", message: e.message};
+    }
+}
+
+async function rowPrimaryCheck(rows, linkedIdSet){
+
+
 }
 
 module.exports = router;
