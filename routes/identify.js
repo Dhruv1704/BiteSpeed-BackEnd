@@ -3,6 +3,9 @@ const router = express.Router();
 const {body, validationResult} = require('express-validator');
 const clientDB = require('../db');
 
+router.get('/', function(req, res, next) {
+    res.json("Use POST method to identify contact.(via postman or curl)");
+});
 
 router.post('/', [
     body('email', 'Enter a valid email').optional({nullable: true}).isEmail(),
