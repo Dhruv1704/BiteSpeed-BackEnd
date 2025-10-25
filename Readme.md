@@ -10,7 +10,7 @@ Built using **Node.js**, **Express**, and **PostgreSQL**, the API ensures each c
 
 ## API Endpoint
 
-**Base URL:**
+**URL:**
 
 ```
 https://bite-speed-back-end.vercel.app/identify
