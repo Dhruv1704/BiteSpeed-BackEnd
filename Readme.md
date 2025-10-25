@@ -121,6 +121,6 @@ Use **Postman** or **cURL** to test the API endpoint.
 
 **Dhruv Singh Negi**
 📧 [negidhruv1701@gmail.com](mailto:negidhruv1701@gmail.com)
-🔗 [LinkedIn](https://linkedin.com/in/dhruv-s-n) | [GitHub](https://github.com/Dhruv1704)
+🔗 [LinkedIn](https://linkedin.com/in/dhruv-s-n) | [Resume](https://drive.google.com/file/d/1G992MfsaxV1nTTk95TnRqYRyyTInete3/view?usp=sharing)
 
 ---
