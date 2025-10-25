@@ -72,8 +72,8 @@ router.post('/', [
 // gets rows with email or phone number.
 async function getRowsWithEmailOrPhone(email, phoneNumber) {
     try {
-        const sql = `SELECT * FROM contact WHERE email='${email}' OR phoneNumber='${phoneNumber}'`;
-        const {rows} = await clientDB.query(sql);
+        const sql = `SELECT * FROM contact WHERE email='$1' OR phoneNumber='$2'`;
+        const {rows} = await clientDB.query(sql, [email, phoneNumber]);
         return {status: "success",rows};
     }catch (e){
         return {status: "error", message: e.message};
@@ -157,7 +157,7 @@ async function rowPrimaryToSecondaryCheck(rows, linkedIds){
                                              AND id <> $2`
             await clientDB.query(updateOtherLinkedRows, [linkedIds, newLinkedId]);
 
-            const {rows} = await clientDB.query(`SELECT * FROM contact WHERE id='${newLinkedId}' OR linkedId='${newLinkedId}'`);
+            const {rows} = await clientDB.query(`SELECT * FROM contact WHERE id='$1' OR linkedId='$1'`, [newLinkedId]);
             return {status: "success",rows};
         }catch (e){
             return {status: "error", message: e.message};
