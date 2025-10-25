@@ -42,7 +42,7 @@ router.post('/', [
 
 
     const linkedRows = linkedRowsQueryRes.rows;
-    const rowsAfterPrimaryCheckRes = await rowPrimaryCheck(linkedRows, Array.from(linkedIdSet));
+    const rowsAfterPrimaryCheckRes = await rowPrimaryToSecondaryCheck(linkedRows, Array.from(linkedIdSet));
     if(rowsAfterPrimaryCheckRes.status==="error") return res.status(400).json(rowsAfterPrimaryCheckRes);
 
     const rowsAfterPrimaryCheck = rowsAfterPrimaryCheckRes.rows;
@@ -130,7 +130,7 @@ async function createNewContact(email, phoneNumber, existingRowsCount, linkedId=
     }
 }
 
-async function rowPrimaryCheck(rows, linkedIds){
+async function rowPrimaryToSecondaryCheck(rows, linkedIds){
     let countPrimary = 0;
     rows.forEach((row)=>{
         if(row.linkprecedence==="primary")countPrimary++;
