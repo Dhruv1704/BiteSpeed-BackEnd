@@ -20,12 +20,17 @@ https://bite-speed-back-end.vercel.app/identify
 
 Identifies and links a user by `email` or `phoneNumber`.
 If a new combination is found, it intelligently creates or updates contact relationships.
+The response provides a unified view of the contact's identity with first element of emails and phoneNumbers being that of the primary contact.
+
+Note : In request body, at least one of email or phoneNumber should be provided.\
+Also a validator is implemented in email field to check for valid email format. No validator in phoneNumber field but can be added as per requirements.
+
 
 #### Example Request:
 
 ```json
 {
-  "email": "doc@flux.com",
+  "email": "doc@flux.com", 
   "phoneNumber": "1234567890"
 }
 ```
