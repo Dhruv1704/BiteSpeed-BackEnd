@@ -41,8 +41,8 @@ Also a validator is implemented in email field to check for valid email format. 
 {
   "contact": {
     "primaryContatctId": 1,
-    "emails": ["doc@flux.com"], //first element being email of primary contact 
-    "phoneNumbers": ["1234567890"], // first element being phoneNumber of primary contact
+    "emails": ["doc@flux.com"], 
+    "phoneNumbers": ["1234567890"], 
     "secondaryContactIds": []
   }
 }
@@ -65,8 +65,6 @@ CREATE TABLE contacts (
 );
 ```
 
-* **primary contact** → main identity record (oldest)
-* **secondary contact** → linked records (additional emails/phones)
 
 ---
 
