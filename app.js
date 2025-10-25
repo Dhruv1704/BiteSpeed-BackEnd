@@ -4,7 +4,7 @@ const indexRouter = require('./routes/index');
 const identifyRouter = require('./routes/identify');
 
 const app = express();
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
